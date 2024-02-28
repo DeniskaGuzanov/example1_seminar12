@@ -1,0 +1,27 @@
+package ru.gb.example1_seminar12.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ru.gb.example1_seminar12.model.Note;
+import ru.gb.example1_seminar12.services.FileGateway;
+import java.time.LocalDateTime;
+
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/notes")
+public class NoteController {
+    private final FileGateway fileGateway;
+
+
+
+    @PostMapping
+    public ResponseEntity<Note> addNote(@RequestBody Note note) {
+        note.setCreation(LocalDateTime.now());
+        fileGateway.writeToFile(note.getTitle() + ".txt", note.toString());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+}
